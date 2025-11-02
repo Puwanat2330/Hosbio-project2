@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VITAL SIGNS MONITORING CONSOLE</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ------------------------------------------- */
+        /* ส่วนที่ 1: การกำหนดตัวแปรและสไตล์พื้นฐาน (CSS) */
+        /* ------------------------------------------- */
+        
+         :root {
+            --primary-blue: #00aaff;
+            /* ฟ้าหลัก */
+            --primary-glow: #00e5ff;
+            /* ฟ้าอ่อนเรืองแสง */
+            --alert-red: #ff3333;
+            /* แดงสำหรับแจ้งเตือนวิกฤต */
+            --bg-dark: #0a141f;
+            /* พื้นหลังดำน้ำเงินเข้ม */
+            --console-bg: rgba(2, 10, 20, 0.9);
+            --text-light: #e0f7ff;
+            --font-main: 'Orbitron', sans-serif;
+            --font-mono: 'Share Tech Mono', monospace;
+        }
+        
+        body {
+            font-family: var(--font-mono);
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle, rgba(0, 170, 255, 0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        /* --- Header / Title --- */
+        
+        .header-console {
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 2px solid var(--primary-blue);
+            box-shadow: 0 0 10px var(--primary-blue);
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-family: var(--font-main);
+            color: var(--primary-glow);
+            font-size: 2.2em;
+            text-shadow: 0 0 10px var(--primary-glow);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+        /* --- Main Console Container --- */
+        
+        .console-container {
+            width: 90%;
+            max-width: 1500px;
+            padding: 30px;
+            background-color: var(--console-bg);
+            border: 2px solid var(--primary-blue);
+            border-radius: 10px;
+            box-shadow: 0 0 40px rgba(0, 170, 255, 0.5);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        /* --- Patient Info Panel --- */
+        
+        .patient-info {
+            width: 100%;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px dashed var(--primary-blue);
+        }
+        
+        .patient-id-line {
+            font-size: 1.5em;
+            color: var(--primary-glow);
+            margin-bottom: 5px;
+        }
+        /* ------------------------------------------- */
+        /* VITAL SIGNS BOXES */
+        /* ------------------------------------------- */
+        
+        .vitals-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            width: 70%;
+        }
+        
+        .vital-box {
+            flex: 1 1 200px;
+            min-height: 150px;
+            background-color: rgba(0, 170, 255, 0.05);
+            border: 1px solid rgba(0, 170, 255, 0.5);
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0, 170, 255, 0.2);
+            position: relative;
+            transition: all 0.2s;
+        }
+        
+        .label {
+            font-size: 0.8em;
+            color: var(--primary-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        
+        .value {
+            font-size: 3em;
+            font-family: var(--font-main);
+            color: var(--primary-glow);
+            text-shadow: 0 0 5px var(--primary-glow);
+            line-height: 1;
+        }
+        
+        .unit {
+            font-size: 1.2em;
+            color: var(--primary-blue);
+        }
+        
+        .vital-box.critical {
+            border-color: var(--alert-red);
+            box-shadow: 0 0 20px var(--alert-red);
+            animation: critical-flash-box 1s infinite alternate;
+        }
+        
+        .vital-box.critical .value {
+            color: var(--alert-red);
+            text-shadow: 0 0 8px var(--alert-red);
+        }
+        /* ------------------------------------------- */
+        /* ALERT / STATUS PANEL */
+        /* ------------------------------------------- */
+        
+        .alert-panel {
+            width: calc(30% - 20px);
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--primary-blue);
+            border-radius: 5px;
+            padding: 15px;
+            min-height: 400px;
+            transition: all 0.5s;
+        }
+        
+        .alert-panel.critical {
+            background-color: rgba(255, 51, 51, 0.1);
+            border-color: var(--alert-red);
+            animation: critical-flash-panel 1s infinite alternate;
+        }
+        
+        .alert-panel h2 {
+            font-family: var(--font-main);
+            color: var(--alert-red);
+            text-shadow: 0 0 8px var(--alert-red);
+            text-transform: uppercase;
+            font-size: 1.2em;
+            border-bottom: 1px dashed var(--alert-red);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .alert-message {
+            color: var(--alert-red);
+            text-shadow: 0 0 3px var(--alert-red);
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+        /* Animation Keyframes */
+        
+        @keyframes critical-flash-box {
+            from {
+                background-color: rgba(255, 51, 51, 0.05);
+            }
+            to {
+                background-color: rgba(255, 51, 51, 0.2);
+            }
+        }
+        
+        @keyframes critical-flash-panel {
+            from {
+                box-shadow: 0 0 10px var(--alert-red);
+            }
+            to {
+                box-shadow: 0 0 25px var(--alert-red);
+            }
+        }
+        /* ------------------------------------------- */
+        /* สไตล์สำหรับปุ่มย้อนกลับ (BACK BUTTON) */
+        /* ------------------------------------------- */
+        
+        .back-console-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            border: 1px solid var(--primary-glow);
+            background-color: rgba(0, 0, 0, 0.4);
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            /* Animation เลื่อนลง */
+            transform: translateY(-30px);
+            opacity: 0;
+            animation: slide-in-top 0.5s ease-out 0.2s forwards;
+        }
+        
+        @keyframes slide-in-top {
+            0% {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .back-console-button:hover {
+            background-color: var(--primary-glow);
+            color: var(--bg-dark);
+            box-shadow: 0 0 15px var(--primary-glow);
+            transform: translateY(0px) scale(1.05);
+            /* ปรับ transform ตอน hover ให้ทำงานร่วมกับ animation */
+        }
+        
+        .back-icon {
+            font-size: 1.2em;
+            margin-right: 8px;
+            color: var(--primary-glow);
+        }
+        
+        .back-text {
+            font-family: var(--font-main);
+            font-size: 0.9em;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .back-console-button:hover .back-icon,
+        .back-console-button:hover .back-text {
+            color: var(--bg-dark);
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="patient.html" class="back-console-button">
+        <span class="back-icon">❮</span>
+        <span class="back-text">BACK</span>
+    </a>
+
+    <div class="header-console">
+        <h1>INTELLIGENT CRITICAL MONITORING (ICM)</h1>
+        <p style="color: rgba(224, 247, 255, 0.7); font-size: 0.9em; margin-top: 5px;">REAL-TIME VITAL STREAM: MODULE ONLINE</p>
+    </div>
+
+    <div class="console-container">
+
+        <div class="patient-info">
+            <div class="patient-id-line" id="display-patient-id">PATIENT ID: N/A | LOCATION: ICU BAY 4</div>
+            <div style="font-size: 1.2em; color: var(--text-light);" id="display-patient-name">NAME: N/A | AGE: N/A</div>
+            <div style="font-size: 1.0em; color: var(--primary-blue);" id="display-patient-condition">CONDITION: N/A</div>
+        </div>
+
+        <div class="vitals-grid">
+
+            <div class="vital-box" id="hr-box">
+                <div class="label">HEART RATE (BPM)</div>
+                <div class="value" id="hr-value">0 <span class="unit">bpm</span></div>
+            </div>
+
+            <div class="vital-box" id="spo2-box">
+                <div class="label">SPO2 SATURATION (%)</div>
+                <div class="value" id="spo2-value">0 <span class="unit">%</span></div>
+            </div>
+
+            <div class="vital-box" id="bp-box">
+                <div class="label">BLOOD PRESSURE (BP)</div>
+                <div class="value" id="bp-value">0/0</div>
+            </div>
+
+            <div class="vital-box" id="rr-box">
+                <div class="label">RESPIRATION RATE (RPM)</div>
+                <div class="value" id="rr-value">0 <span class="unit">rpm</span></div>
+            </div>
+
+            <div class="vital-box" id="temp-box">
+                <div class="label">BODY TEMPERATURE (°C)</div>
+                <div class="value" id="temp-value">0.0 <span class="unit">°C</span></div>
+            </div>
+
+            <div class="vital-box" id="glucose-box">
+                <div class="label">GLUCOSE LEVEL (MG/DL)</div>
+                <div class="value" id="glucose-value">0 <span class="unit">mg/dl</span></div>
+            </div>
+
+        </div>
+
+        <div class="alert-panel" id="alert-panel-main">
+            <h2>SYSTEM ALERTS (ACTIVE)</h2>
+            <div id="alert-messages">
+                <p style="color: var(--primary-blue); font-size: 0.9em;">STATUS: INITIALIZING DATA STREAM</p>
+            </div>
+
+            <hr style="border-color: rgba(0, 170, 255, 0.5); margin: 15px 0;">
+            <p style="font-size: 0.8em;">LAST DATA SYNCH: <span id="sync-time">0</span> SECONDS AGO</p>
+            <p style="font-size: 0.8em;">SYSTEM LOAD: 12%</p>
+        </div>
+
+    </div>
+
+    <script>
+        // *******************************************************
+        // 0. ดึงข้อมูลผู้ป่วยจาก Local Storage มาแสดงผล
+        // *******************************************************
+        document.addEventListener('DOMContentLoaded', function() {
+            const storedId = localStorage.getItem('monitor_patient_id') || 'UNKNOWN';
+            const storedName = localStorage.getItem('monitor_patient_name') || 'CLASSIFIED';
+            const storedAge = localStorage.getItem('monitor_patient_age') || 'XX';
+            const storedCondition = localStorage.getItem('monitor_patient_condition') || 'OBSERVATION';
+
+            // อัปเดตข้อมูลบนหน้าจอ
+            document.getElementById('display-patient-id').textContent = 'PATIENT ID: ' + storedId + ' | LOCATION: ICU BAY 4';
+            document.getElementById('display-patient-name').textContent = 'NAME: ' + storedName + ' | AGE: ' + storedAge;
+            document.getElementById('display-patient-condition').textContent = 'CONDITION: ' + storedCondition;
+
+            // เริ่มการจำลอง Vitals หลังโหลดข้อมูล
+            updateVitals();
+            setInterval(updateVitals, 1000);
+        });
+
+        // 1. กำหนด DOM Element IDs
+        const hrValue = document.getElementById('hr-value');
+        const spo2Value = document.getElementById('spo2-value');
+        const rrValue = document.getElementById('rr-value');
+        const tempValue = document.getElementById('temp-value');
+        const bpValue = document.getElementById('bp-value');
+        const glucoseValue = document.getElementById('glucose-value');
+
+        const hrBox = document.getElementById('hr-box');
+        const bpBox = document.getElementById('bp-box');
+        const glucoseBox = document.getElementById('glucose-box');
+
+        const alertPanelMain = document.getElementById('alert-panel-main');
+        const alertMessages = document.getElementById('alert-messages');
+        const syncTime = document.getElementById('sync-time');
+
+        let secondsElapsed = 0;
+
+        // 2. สร้าง Function สำหรับการสุ่มตัวเลขในช่วงที่กำหนด
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function getRandomFloat(min, max) {
+            return (Math.random() * (max - min) + min).toFixed(1);
+        }
+
+        // 3. Function หลัก: อัปเดตค่า Vitals และตรวจสอบ Alert
+        function updateVitals() {
+            let alerts = '';
+
+            // รีเซ็ตสถานะ Critical Box
+            hrBox.classList.remove('critical');
+            bpBox.classList.remove('critical');
+            glucoseBox.classList.remove('critical');
+
+            // --- A. Heart Rate (HR) ---
+            let hr = (Math.random() < 0.1) ? getRandomInt(120, 140) : getRandomInt(80, 95);
+            hrValue.innerHTML = hr + ' <span class="unit">bpm</span>';
+            if (hr > 110) {
+                hrBox.classList.add('critical');
+                alerts += '<p class="alert-message">!!! TACHYCARDIA ALERT: HIGH HEART RATE (' + hr + ' BPM) !!!</p>';
+            }
+
+            // --- B. SPO2 ---
+            let spo2 = getRandomInt(96, 100);
+            spo2Value.innerHTML = spo2 + ' <span class="unit">%</span>';
+
+            // --- C. Respiration Rate (RR) ---
+            let rr = getRandomInt(14, 18);
+            rrValue.innerHTML = rr + ' <span class="unit">rpm</span>';
+
+            // --- D. Temperature (Temp) ---
+            let temp = getRandomFloat(36.5, 37.5);
+            tempValue.innerHTML = temp + ' <span class="unit">°C</span>';
+
+            // --- E. Glucose ---
+            let glucose = (Math.random() < 0.05) ? getRandomInt(40, 50) : getRandomInt(80, 100);
+            glucoseValue.innerHTML = glucose + ' <span class="unit">mg/dl</span>';
+
+            if (glucose < 60) {
+                glucoseBox.classList.add('critical');
+                alerts += '<p class="alert-message">!!! HYPOGLYCEMIA ALERT: LOW GLUCOSE (' + glucose + ' MG/DL) !!!</p>';
+            }
+
+            // --- F. Blood Pressure (BP) ---
+            if (Math.random() < 0.03) {
+                bpValue.textContent = '175/105';
+                bpBox.classList.add('critical');
+                alerts += '<p class="alert-message">!!! CRITICAL: SEVERE HYPERTENSION DETECTED !!!</p>';
+            } else {
+                bpValue.textContent = '125/80';
+            }
+
+            // --- G. อัปเดต Alert Panel ---
+            if (alerts === '') {
+                alerts = '<p style="color: var(--primary-blue); font-size: 0.9em;">STATUS: ALL VITAL SIGNS OPTIMAL. NO ALERTS.</p>';
+                alertPanelMain.classList.remove('critical');
+            } else {
+                let header = '<p class="alert-message" style="font-size: 1.1em; margin-bottom: 15px;">*** CRITICAL PROTOCOL ACTIVE: ANOMALY DETECTED ***</p>';
+                alerts = header + alerts;
+                alertPanelMain.classList.add('critical');
+            }
+            alertMessages.innerHTML = alerts;
+
+            // อัปเดตเวลา Sync
+            secondsElapsed++;
+            syncTime.textContent = secondsElapsed;
+        }
+    </script>
+</body>
+
+</html>

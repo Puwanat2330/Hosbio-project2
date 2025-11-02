@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💊 PHARMACY INVENTORY CONSOLE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ปิดไว้อยู่ Exit อันตรงกลาง */
+        /* ------------------------------------------- */
+        /* สไตล์สำหรับปุ่มตรงกลางด้านล่าง (BOTTOM CENTER ACTION BUTTON) */
+        /* ------------------------------------------- */
+        
+        .action-console-button {
+            /* ตำแหน่ง: กลางล่าง (Fixed Position) */
+            position: fixed;
+            bottom: 90px;
+            /* ระยะห่างจากขอบล่าง */
+            left: 50%;
+            /* เลื่อนมาที่กึ่งกลางของหน้าจอ */
+            transform: translateX(-50%);
+            /* เลื่อนกลับไปครึ่งหนึ่งของความกว้างปุ่ม เพื่อให้ปุ่มอยู่ตรงกลางพอดี */
+            z-index: 1000;
+            /* ให้ปุ่มอยู่เหนือ Element อื่นๆ */
+            /* การตกแต่งปุ่ม (ใช้ธีมสีเรืองแสง) */
+            display: flex;
+            align-items: center;
+            padding: 10px 30px;
+            border: 2px solid var(--primary-glow);
+            /* ใช้สีเรืองแสงหลัก (เช่น เขียวหรือฟ้า) */
+            background-color: rgba(0, 0, 0, 0.6);
+            /* พื้นหลังโปร่งแสงเข้ม */
+            border-radius: 50px;
+            /* ทำให้ขอบโค้งมนดูสวยงาม */
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
+            transition: all 0.3s ease;
+        }
+        /* เอฟเฟกต์เมื่อชี้เม้าส์ */
+        
+        .action-console-button:hover {
+            background-color: var(--primary-glow);
+            /* เปลี่ยนพื้นหลังเป็นสีเรืองแสง */
+            color: var(--bg-dark);
+            /* เปลี่ยนข้อความให้เป็นสีเข้ม */
+            box-shadow: 0 0 25px var(--primary-glow), 0 0 50px rgba(255, 255, 255, 0.5);
+            /* เพิ่มแสงเรืองแสงเข้มข้น */
+            transform: translateX(-50%) scale(1.05);
+            /* ขยายเล็กน้อยและคงตำแหน่งกลางไว้ */
+        }
+        /* สไตล์ไอคอน */
+        
+        .action-icon {
+            font-size: 1.5em;
+            margin-right: 12px;
+            color: var(--primary-glow);
+        }
+        /* สไตล์ข้อความ */
+        
+        .action-text {
+            font-family: var(--font-main);
+            /* ใช้ฟอนต์หลักแบบล้ำยุค */
+            font-size: 1.1em;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        /* สไตล์เมื่อ Hover (เปลี่ยนสีข้อความและไอคอน) */
+        
+        .action-console-button:hover .action-icon,
+        .action-console-button:hover .action-text {
+            color: var(--bg-dark);
+            /* เปลี่ยนเป็นสีเข้ม */
+        }
+        /*------------------------------------------------------------------------------------------------*/
+        /* ------------------------------------------- */
+        /* สไตล์สำหรับแถบควบคุมนำทาง (NAVIGATION BAR) */
+        /* ------------------------------------------- */
+        
+        .navigation-control-bar {
+            /* กำหนดตำแหน่งให้อยู่ตรงกลางด้านล่างและตรึงอยู่กับที่ */
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            /* จัดรูปแบบปุ่มให้อยู่ในแถวเดียวกัน */
+            display: flex;
+            gap: 20px;
+            /* ระยะห่างระหว่างปุ่ม */
+        }
+        
+        .nav-btn {
+            /* สไตล์พื้นฐานของปุ่ม */
+            display: flex;
+            align-items: center;
+            padding: 10px 25px;
+            border-radius: 50px;
+            /* ขอบโค้งมน */
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-main);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 1em;
+            font-weight: 700;
+        }
+        /* --- สไตล์ปุ่มย้อนกลับ (BACK) --- */
+        
+        .nav-back {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--primary-green);
+            /* ใช้สีเขียวหลัก */
+            color: var(--primary-glow);
+        }
+        
+        .nav-back:hover {
+            background-color: var(--primary-green);
+            color: var(--bg-dark);
+            /* ข้อความสีเข้มเมื่อ Hover */
+            box-shadow: 0 0 15px var(--primary-glow);
+            transform: scale(1.05);
+        }
+        /* --- สไตล์ปุ่มไปข้างหน้า (FORWARD) --- */
+        
+        .nav-forward {
+            background-color: rgba(57, 255, 20, 0.4);
+            /* พื้นหลังเข้มกว่า */
+            border: 2px solid var(--primary-glow);
+            color: var(--bg-dark);
+            /* ข้อความสีเข้ม */
+            box-shadow: 0 0 8px var(--primary-glow);
+        }
+        
+        .nav-forward:hover {
+            background-color: var(--primary-glow);
+            color: var(--bg-dark);
+            box-shadow: 0 0 20px var(--primary-glow);
+            transform: scale(1.05);
+        }
+        /* สไตล์ไอคอน */
+        
+        .nav-icon {
+            font-size: 1.2em;
+            line-height: 1;
+            /* จัดให้อยู่ตรงกลางแนวตั้ง */
+        }
+        
+        .nav-back .nav-icon {
+            margin-right: 10px;
+        }
+        
+        .nav-forward .nav-icon {
+            margin-left: 10px;
+        }
+        /* เมื่อ Hover เปลี่ยนสีไอคอนให้เป็นสีพื้นหลังของข้อความเดิม */
+        
+        .nav-back:hover .nav-icon {
+            color: var(--bg-dark);
+        }
+        
+        .nav-forward:hover .nav-icon {
+            color: var(--bg-dark);
+        }
+        /*----------------------------------------------------------------------*/
+        
+         :root {
+            --primary-green: #39ff14;
+            /* เขียวนีออน */
+            --primary-glow: #7cff66;
+            --alert-yellow: #ffeb3b;
+            /* เหลืองสำหรับ Low Stock */
+            --bg-dark: #121212;
+            --console-bg: rgba(0, 0, 0, 0.9);
+            --text-light: #f0f0f0;
+            --font-main: 'Orbitron', sans-serif;
+            --font-mono: 'Share Tech Mono', monospace;
+        }
+        
+        body {
+            font-family: var(--font-mono);
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle, rgba(57, 255, 20, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        /* --- Header --- */
+        
+        .header-console {
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 2px solid var(--primary-green);
+            box-shadow: 0 0 10px var(--primary-green);
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-family: var(--font-main);
+            color: var(--primary-glow);
+            font-size: 2.2em;
+            text-shadow: 0 0 10px var(--primary-glow);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+        /* --- Main Layout --- */
+        
+        .console-container {
+            width: 90%;
+            max-width: 1400px;
+            padding: 30px;
+            background-color: var(--console-bg);
+            border: 2px solid var(--primary-green);
+            border-radius: 10px;
+            box-shadow: 0 0 40px rgba(57, 255, 20, 0.3);
+            display: flex;
+            gap: 20px;
+        }
+        /* --- Left Side: Inventory Status --- */
+        
+        .inventory-status {
+            width: 35%;
+        }
+        
+        .stock-card {
+            background-color: rgba(57, 255, 20, 0.05);
+            border: 1px solid rgba(57, 255, 20, 0.3);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .stock-card.low {
+            border-color: var(--alert-yellow);
+            box-shadow: 0 0 10px var(--alert-yellow);
+            animation: pulse-yellow 1.5s infinite alternate;
+        }
+        
+        .drug-name {
+            font-family: var(--font-main);
+            font-size: 1.1em;
+            color: var(--primary-glow);
+            margin-bottom: 5px;
+        }
+        
+        .qty-label {
+            font-size: 0.9em;
+            color: var(--primary-green);
+        }
+        
+        .qty-value {
+            font-size: 2.5em;
+            color: var(--text-light);
+            text-shadow: 0 0 5px var(--primary-glow);
+            font-weight: 700;
+        }
+        
+        .stock-card.low .qty-value {
+            color: var(--alert-yellow);
+            text-shadow: 0 0 8px var(--alert-yellow);
+        }
+        /* --- Right Side: Transaction Log --- */
+        
+        .transaction-log {
+            width: 65%;
+        }
+        
+        .transaction-log h2 {
+            font-family: var(--font-main);
+            color: var(--primary-green);
+            font-size: 1.2em;
+            border-bottom: 1px dashed var(--primary-green);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .log-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+        
+        .log-table th,
+        .log-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid rgba(57, 255, 20, 0.1);
+        }
+        
+        .log-table th {
+            color: var(--primary-green);
+            font-family: var(--font-main);
+            text-transform: uppercase;
+        }
+        /* Animation */
+        
+        @keyframes pulse-yellow {
+            from {
+                opacity: 0.8;
+            }
+            to {
+                opacity: 1.0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header-console">
+        <h1>DRUG DISPENSING & INVENTORY CONTROL</h1>
+        <p style="color: rgba(240, 240, 240, 0.7); font-size: 0.9em;">PHARMACY AUTOMATION PROTOCOL ACTIVE</p>
+    </div>
+
+    <div class="console-container">
+        <div class="inventory-status">
+            <h2>CRITICAL STOCK LEVELS</h2>
+
+            <div class="stock-card" id="card-paracetamol">
+                <div class="drug-name">PARACETAMOL 500 MG</div>
+                <div class="qty-label">CURRENT STOCK (UNITS):</div>
+                <div class="qty-value" id="qty-paracetamol">320</div>
+            </div>
+
+            <div class="stock-card" id="card-amoxicillin">
+                <div class="drug-name">AMOXICILLIN 250 MG</div>
+                <div class="qty-label">CURRENT STOCK (UNITS):</div>
+                <div class="qty-value" id="qty-amoxicillin">85</div>
+            </div>
+
+            <div class="stock-card low" id="card-insulin">
+                <div class="drug-name">INSULIN NOVORAPID</div>
+                <div class="qty-label">CURRENT STOCK (VIALS):</div>
+                <div class="qty-value" id="qty-insulin">12</div>
+            </div>
+
+            <div class="stock-card" id="card-morphine">
+                <div class="drug-name">MORPHINE (CONTROLLED)</div>
+                <div class="qty-label">CURRENT STOCK (VIALS):</div>
+                <div class="qty-value" id="qty-morphine">25</div>
+            </div>
+        </div>
+
+        <div class="transaction-log">
+            <h2>LAST 10 DISPENSING LOGS (REAL-TIME)</h2>
+            <table class="log-table">
+                <thead>
+                    <tr>
+                        <th>TIME</th>
+                        <th>PATIENT ID</th>
+                        <th>DRUG NAME</th>
+                        <th>QTY</th>
+                        <th>LOCATION</th>
+                    </tr>
+                </thead>
+                <tbody id="log-body">
+                    <tr>
+                        <td>09:45:01</td>
+                        <td>P-901</td>
+                        <td>Paracetamol</td>
+                        <td>2</td>
+                        <td>ER</td>
+                    </tr>
+                    <tr>
+                        <td>09:44:30</td>
+                        <td>P-455</td>
+                        <td>Insulin Novorapid</td>
+                        <td>1</td>
+                        <td>ICU</td>
+                    </tr>
+                    <tr>
+                        <td>09:43:55</td>
+                        <td>P-112</td>
+                        <td>Amoxicillin</td>
+                        <td>4</td>
+                        <td>Ward A</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    // ... (ส่วน HTML และ CSS ข้างต้น) ...
+    <script>
+        // ... (ตัวแปร drugs, stock, logs และ getRandomInt เดิม) ...
+
+        const logBody = document.getElementById('log-body');
+        const drugs = [
+            // กำหนดค่า Min และ Qty
+            {
+                name: 'Paracetamol 500 MG',
+                min: 100,
+                qty: 2,
+                id: 'card-paracetamol',
+                valueId: 'qty-paracetamol'
+            }, {
+                name: 'Amoxicillin 250 MG',
+                min: 50,
+                qty: 4,
+                id: 'card-amoxicillin',
+                valueId: 'qty-amoxicillin'
+            }, {
+                name: 'Insulin Novorapid',
+                min: 15,
+                qty: 1,
+                id: 'card-insulin',
+                valueId: 'qty-insulin'
+            }, {
+                name: 'Morphine (Controlled)',
+                min: 10,
+                qty: 1,
+                id: 'card-morphine',
+                valueId: 'qty-morphine'
+            }
+        ];
+
+        // Stock: ดึงจาก Local Storage หรือใช้ค่าเริ่มต้น
+        let stock = JSON.parse(localStorage.getItem('pharmacy_stock')) || {
+            'Paracetamol 500 MG': 320,
+            'Amoxicillin 250 MG': 85,
+            'Insulin Novorapid': 12,
+            'Morphine (Controlled)': 25
+        };
+
+        // ดึง Log ที่ถูกกรอกจาก Form
+        let logs = JSON.parse(localStorage.getItem('dispense_logs')) || [];
+
+        // ... (Function getRandomInt และ updateStockDisplay เดิม) ...
+        function updateStockDisplay() {
+            // ... (โค้ดเดิม) ...
+            localStorage.setItem('pharmacy_stock', JSON.stringify(stock));
+        }
+
+
+        // ----------------------------------------------------
+        // FUNCTION: แสดง Log และหักสต็อก
+        // ----------------------------------------------------
+        function displayLogs() {
+            logBody.innerHTML = '';
+            let stockUpdated = false;
+
+            // Process logs from the form first
+            logs.forEach(log => {
+                // หักสต็อกเฉพาะรายการที่ยังไม่ถูกประมวลผล (processed: false)
+                if (!log.processed) {
+                    const drugFound = drugs.find(d => d.name === log.drugName);
+                    if (drugFound) {
+                        stock[log.drugName] -= parseInt(log.qty);
+                        if (stock[log.drugName] < 0) stock[log.drugName] = 0;
+
+                        log.processed = true; // ทำเครื่องหมายว่าประมวลผลแล้ว
+                        stockUpdated = true;
+                    }
+                }
+            });
+
+            // ถ้ามีการหักสต็อกใหม่ ให้บันทึก Log และ Stock ใหม่
+            if (stockUpdated) {
+                localStorage.setItem('dispense_logs', JSON.stringify(logs));
+                updateStockDisplay();
+            }
+
+            // แสดงผล Log ทั้งหมด (จำกัด 10 แถวแรก)
+            logs.slice(0, 10).forEach(log => {
+                const newRow = logBody.insertRow(-1);
+                // ใช้ชื่อยาแบบย่อ และแสดงชื่อเต็ม/อาการใน Title สำหรับ Tooltip
+                const drugShort = log.drugName.split(' ')[0];
+
+                newRow.innerHTML = `
+                <td>${log.time}</td>
+                <td>${log.patientId}</td>
+                <td title="Patient: ${log.patientName}, Diagnosis: ${log.diagnosis}">${drugShort}</td>
+                <td>${log.qty}</td>
+                <td>${log.location}</td>
+            `;
+            });
+        }
+
+        // ----------------------------------------------------
+        // FUNCTION: จำลอง Log (ถ้าไม่มี Log จาก Form เลย)
+        // ----------------------------------------------------
+        function addSimulationLog() {
+            // ... (โค้ดเดิม) ...
+            // ใช้ชื่อยาแบบสุ่มจาก drugOptions list แทน
+            const drug = drugs[getRandomInt(0, drugs.length - 1)];
+            // ... (โค้ดเดิม) ...
+
+            // ... (สร้าง newLog) ...
+
+            // เพิ่มสถานะ processed เพื่อให้ไม่ถูกหักสต็อกซ้ำซ้อน
+            newLog.processed = true;
+
+            logs.unshift(newLog);
+            // ... (หักสต็อกและบันทึก logs และ stock) ...
+
+            displayLogs();
+        }
+
+        // ----------------------------------------------------
+        // INITIALIZATION
+        // ----------------------------------------------------
+
+        // 1. แสดง Log ที่มีอยู่
+        displayLogs();
+
+        // 2. เริ่มการจำลอง Log หากไม่มีการกรอกข้อมูลจาก Form ใหม่เข้ามาเกิน 10 วินาที
+        if (logs.filter(log => !log.processed).length === 0) {
+            setInterval(addSimulationLog, 3000);
+        }
+    </script>
+
+    <div class="navigation-control-bar">
+
+        <a href="dispharmacy.html" class="nav-btn nav-back">
+            <span class="nav-icon">❮</span>
+            <span class="nav-text">BACK</span>
+        </a>
+
+        <a href="index.html" class="nav-btn nav-forward">
+            <span class="nav-text">EXIT</span>
+            <span class="nav-icon">❯</span>
+        </a>
+    </div>
+
+
+    <!-- <a href="dispharmacy.html" class="action-console-button">
+        <span class="action-icon"></span>
+        <span class="action-text">EXIT </span>
+    </a>-->
+
+
+</body>
+
+</html>

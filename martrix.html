@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📅 OR SCHEDULE MATRIX</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ------------------------------------------- */
+        /* สไตล์สำหรับปุ่มตรงกลางด้านล่าง (BOTTOM CENTER ACTION BUTTON) */
+        /* ------------------------------------------- */
+        
+        .action-console-button {
+            /* ตำแหน่ง: กลางล่าง (Fixed Position) */
+            position: fixed;
+            bottom: 30px;
+            /* ระยะห่างจากขอบล่าง */
+            left: 50%;
+            /* เลื่อนมาที่กึ่งกลางของหน้าจอ */
+            transform: translateX(-50%);
+            /* เลื่อนกลับไปครึ่งหนึ่งของความกว้างปุ่ม เพื่อให้ปุ่มอยู่ตรงกลางพอดี */
+            z-index: 1000;
+            /* ให้ปุ่มอยู่เหนือ Element อื่นๆ */
+            /* การตกแต่งปุ่ม (ใช้ธีมสีเรืองแสง) */
+            display: flex;
+            align-items: center;
+            padding: 10px 30px;
+            border: 2px solid var(--primary-glow);
+            /* ใช้สีเรืองแสงหลัก (เช่น เขียวหรือฟ้า) */
+            background-color: rgba(0, 0, 0, 0.6);
+            /* พื้นหลังโปร่งแสงเข้ม */
+            border-radius: 50px;
+            /* ทำให้ขอบโค้งมนดูสวยงาม */
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
+            transition: all 0.3s ease;
+        }
+        /* เอฟเฟกต์เมื่อชี้เม้าส์ */
+        
+        .action-console-button:hover {
+            background-color: var(--primary-glow);
+            /* เปลี่ยนพื้นหลังเป็นสีเรืองแสง */
+            color: var(--bg-dark);
+            /* เปลี่ยนข้อความให้เป็นสีเข้ม */
+            box-shadow: 0 0 25px var(--primary-glow), 0 0 50px rgba(255, 255, 255, 0.5);
+            /* เพิ่มแสงเรืองแสงเข้มข้น */
+            transform: translateX(-50%) scale(1.05);
+            /* ขยายเล็กน้อยและคงตำแหน่งกลางไว้ */
+        }
+        /* สไตล์ไอคอน */
+        
+        .action-icon {
+            font-size: 1.5em;
+            margin-right: 12px;
+            color: var(--primary-glow);
+        }
+        /* สไตล์ข้อความ */
+        
+        .action-text {
+            font-family: var(--font-main);
+            /* ใช้ฟอนต์หลักแบบล้ำยุค */
+            font-size: 1.1em;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        /* สไตล์เมื่อ Hover (เปลี่ยนสีข้อความและไอคอน) */
+        
+        .action-console-button:hover .action-icon,
+        .action-console-button:hover .action-text {
+            color: var(--bg-dark);
+            /* เปลี่ยนเป็นสีเข้ม */
+        }
+        /*------------------------------------------------------------------------------------------*/
+        
+         :root {
+            --bg-dark: #1e1e1e;
+            --text-light: #f0f0f0;
+            --font-main: 'Orbitron', sans-serif;
+            --font-mono: 'Share Tech Mono', monospace;
+            --color-ready: #39ff14;
+            /* เขียว */
+            --color-in-progress: #ffeb3b;
+            /* เหลือง */
+            --color-cleaning: #ff5722;
+            /* ส้ม */
+            --color-urgent: #e50000;
+            /* แดง */
+        }
+        
+        body {
+            font-family: var(--font-mono);
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        /* --- Header --- */
+        
+        .header-console {
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 2px solid var(--color-in-progress);
+            box-shadow: 0 0 10px rgba(255, 235, 59, 0.5);
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-family: var(--font-main);
+            color: var(--color-in-progress);
+            font-size: 2.2em;
+            text-shadow: 0 0 10px var(--color-in-progress);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+        /* --- Grid & Cards --- */
+        
+        .matrix-grid {
+            width: 90%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .or-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .or-title {
+            font-family: var(--font-main);
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        
+        .status-badge {
+            font-family: var(--font-mono);
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: 700;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        /* Status Colors */
+        
+        .status-ready {
+            background-color: rgba(57, 255, 20, 0.2);
+            border: 1px solid var(--color-ready);
+            color: var(--color-ready);
+        }
+        
+        .status-in-progress {
+            background-color: rgba(255, 235, 59, 0.2);
+            border: 1px solid var(--color-in-progress);
+            color: var(--color-in-progress);
+            animation: pulse-yellow 2s infinite alternate;
+        }
+        
+        .status-cleaning {
+            background-color: rgba(255, 87, 34, 0.2);
+            border: 1px solid var(--color-cleaning);
+            color: var(--color-cleaning);
+        }
+        
+        .status-urgent {
+            background-color: rgba(229, 0, 0, 0.2);
+            border: 1px solid var(--color-urgent);
+            color: var(--color-urgent);
+            animation: pulse-red 1s infinite alternate;
+        }
+        
+        .case-detail {
+            font-size: 0.9em;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.2);
+        }
+        /* Keyframes */
+        
+        @keyframes pulse-yellow {
+            from {
+                box-shadow: 0 0 5px var(--color-in-progress);
+            }
+            to {
+                box-shadow: 0 0 15px var(--color-in-progress);
+            }
+        }
+        
+        @keyframes pulse-red {
+            from {
+                box-shadow: 0 0 5px var(--color-urgent);
+            }
+            to {
+                box-shadow: 0 0 20px var(--color-urgent);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header-console">
+        <h1>OPERATING ROOM SCHEDULE MATRIX</h1>
+        <p style="color: rgba(240, 240, 240, 0.7); font-size: 0.9em;">REAL-TIME OR STATUS STREAM</p>
+    </div>
+
+    <div class="matrix-grid" id="or-matrix">
+
+    </div>
+
+    <script>
+        const orMatrix = document.getElementById('or-matrix');
+
+        // ข้อมูลห้องผ่าตัดเริ่มต้น (รวมสถานะเริ่มต้นและเวลาผ่าตัดจำลอง)
+        const orRooms = [{
+                id: 1,
+                name: 'OR 1 (Cardiac)',
+                status: 'IN PROGRESS',
+                surgeon: 'Dr. A. Smith',
+                case: 'Coronary Bypass',
+                startTime: Date.now() - 3600000
+            }, // 1 hour ago
+            {
+                id: 2,
+                name: 'OR 2 (General)',
+                status: 'CLEANING',
+                surgeon: 'N/A',
+                case: 'Room Turnover',
+                startTime: null
+            }, {
+                id: 3,
+                name: 'OR 3 (Trauma)',
+                status: 'READY',
+                surgeon: 'N/A',
+                case: 'Scheduled Trauma Standby',
+                startTime: null
+            }, {
+                id: 4,
+                name: 'OR 4 (Ortho)',
+                status: 'IN PROGRESS',
+                surgeon: 'Dr. K. Lee',
+                case: 'Hip Replacement',
+                startTime: Date.now() - 7200000
+            }, // 2 hours ago
+            {
+                id: 5,
+                name: 'OR 5 (Urgent)',
+                status: 'URGENT',
+                surgeon: 'Dr. C. Jones',
+                case: 'Emergency Appendectomy',
+                startTime: Date.now() - 600000
+            }, // 10 mins ago
+            {
+                id: 6,
+                name: 'OR 6 (Min. Invasive)',
+                status: 'READY',
+                surgeon: 'N/A',
+                case: 'Scheduled Laparoscopy',
+                startTime: null
+            }
+        ];
+
+        function formatTime(milliseconds) {
+            const totalSeconds = Math.floor(milliseconds / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function updateOrMatrix() {
+            orMatrix.innerHTML = ''; // เคลียร์
+            const currentTime = Date.now();
+
+            orRooms.forEach(room => {
+                let badgeClass = '';
+                let detailHtml = '';
+                let timeDisplay = '';
+                let caseText = room.case;
+
+                // กำหนดคลาสและรายละเอียดตามสถานะ
+                switch (room.status) {
+                    case 'READY':
+                        badgeClass = 'status-ready';
+                        detailHtml = 'CASE SLOT OPEN - AWAITING PATIENT TRANSFER';
+                        break;
+                    case 'IN PROGRESS':
+                    case 'URGENT':
+                        badgeClass = room.status === 'URGENT' ? 'status-urgent' : 'status-in-progress';
+
+                        // อัปเดตเวลาที่ใช้ไป
+                        if (room.startTime) {
+                            const elapsed = currentTime - room.startTime;
+                            timeDisplay = formatTime(elapsed);
+                            caseText = `${room.case} <span style="font-size:0.9em;">(${timeDisplay} Hr)</span>`;
+                        }
+
+                        detailHtml = `
+                            Case: <strong>${caseText}</strong><br>
+                            Surgeon: ${room.surgeon}<br>
+                            Est. Finish: ${new Date(room.startTime + (4 * 3600000)).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}
+                        `;
+                        break;
+                    case 'CLEANING':
+                        badgeClass = 'status-cleaning';
+                        detailHtml = 'NEXT CASE: Orthopedic Follow-up (ETA 45 mins)';
+                        break;
+                }
+
+                // สร้าง Card HTML
+                const card = document.createElement('div');
+                card.className = 'or-card';
+                card.innerHTML = `
+                    <div class="or-title">${room.name}</div>
+                    <div class="status-badge ${badgeClass}">${room.status}</div>
+                    <div class="case-detail">${detailHtml}</div>
+                `;
+                orMatrix.appendChild(card);
+            });
+        }
+
+        // เริ่ม Timer: อัปเดตทุก 1 วินาที
+        setInterval(updateOrMatrix, 1000);
+
+        // รันครั้งแรก
+        updateOrMatrix();
+    </script>
+    <a href="index.html" class="action-console-button">
+        <span class="action-icon">⏏️</span>
+        <span class="action-text">EXIT </span>
+    </a>
+
+</body>
+
+</html>

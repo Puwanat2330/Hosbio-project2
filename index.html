@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌐 Main Operations Console - System Gateway</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+
+    <style>
+        /* ------------------------------------------- */
+        /* ส่วนที่ 1: การกำหนดตัวแปรและสไตล์พื้นฐาน (CSS) */
+        /* ------------------------------------------- */
+        
+         :root {
+            /* สีธีมหลัก: Green/Blue (Bio-Sci-Fi) */
+            --primary-glow: #00ffaa;
+            /* เขียว Neon */
+            --secondary-accent: #00aaff;
+            /* ฟ้า Aqua */
+            --bg-dark: #0d121b;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(0, 255, 170, 0.3);
+            --text-light: #f0f0f0;
+            --font-main: 'Orbitron', sans-serif;
+            --font-body: 'Roboto', sans-serif;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            /* พื้นหลัง Grid Pattern */
+            background-image: radial-gradient(circle, rgba(0, 255, 170, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        /* --- Header / Title Style --- */
+        
+        .header-console {
+            width: 100%;
+            padding: 30px 0;
+            text-align: center;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-family: var(--font-main);
+            color: var(--primary-glow);
+            font-size: 3em;
+            text-shadow: 0 0 15px var(--primary-glow);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+        }
+        /* --- Main Grid Container Style --- */
+        
+        .grid-container {
+            width: 90%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(5px);
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 255, 170, 0.1);
+        }
+        /* h2 */
+        
+        h2 {
+            font-family: var(--font-main);
+            color: var(--primary-glow);
+            font-size: 3em;
+            text-shadow: 0 0 15px var(--primary-glow);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+        }
+        
+        .neon-title {
+            /* ใช้ฟอนต์หลักที่ดูล้ำยุค */
+            font-family: 'Orbitron', sans-serif;
+            /* สีของข้อความหลัก */
+            color: var(--primary-glow);
+            /* สร้างแสงเรืองแสงหลายชั้น */
+            text-shadow: 0 0 5px var(--primary-glow), /* แสงอ่อนใกล้ตัวอักษร */
+            0 0 10px var(--primary-glow), 0 0 20px #00ff66, /* แสงที่เข้มและกว้างขึ้น (สีเขียวสว่าง) */
+            0 0 40px #00ff66;
+            /* ปรับแต่งอื่นๆ */
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+        /*--------------*/
+        /* --- Navigation Card Style (กล่องเมนู) --- */
+        
+        .nav-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px 20px;
+            text-align: center;
+            cursor: pointer;
+            /* ทำให้ดูเหมือนคลิกได้ */
+            transition: all 0.3s ease-in-out;
+            height: 150px;
+            /* การจัดวางที่สมบูรณ์แบบ: ตรงกลางตลอด */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        /* เอฟเฟกต์เมื่อชี้เม้าส์ (Hover Effect) */
+        
+        .nav-card:hover {
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 25px var(--primary-glow);
+            transform: translateY(-5px) scale(1.03);
+            background-color: rgba(0, 255, 170, 0.08);
+        }
+        /* Icon/Emoji Styling */
+        
+        .nav-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+            color: var(--primary-glow);
+            text-shadow: 0 0 10px var(--primary-glow);
+        }
+        /* Text Styling */
+        
+        .nav-title {
+            font-family: var(--font-main);
+            font-size: 1.1em;
+            font-weight: 700;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+            /* แก้ไขปัญหาการเบี้ยว: ห้าม wrap ข้อความ */
+            white-space: normal;
+            line-height: 1.2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header-console">
+        <h1>GLOBAL SYSTEM OPERATIONS CENTER</h1>
+        <!---<H2>พื้นที่ให้ลงโปรโมท ติดต่อ เบอร์ : 000-000-0000</H2>-->
+        <p style="color: rgba(240, 240, 240, 0.7); font-size: 0.9em;">อะไรก็ได้</p>
+    </div>
+
+    <div class="grid-container">
+
+        <div class="nav-card" data-href="AiPowar.html">
+            <span class="nav-icon">🧠</span>
+            <div class="nav-title">AI-POWERED ECG ANOMALY (การตรวจจับความผิดปกติของคลื่นไฟฟ้าหัวใจด้วย AI)</div>
+        </div>
+
+        <div class="nav-card" data-href="Personalized.html">
+            <span class="nav-icon">📜</span>
+            <div class="nav-title">SPersonalized Stimulation Calculator</div>
+        </div>
+
+        <div class="nav-card" data-href="patient.html">
+
+            <span class="nav-icon">🗃️</span>
+            <div class="nav-title">VITAL SIGNS MONITORING</div>
+        </div>
+
+        <div class="nav-card" data-href="dispharmacy.html">
+            <span class="nav-icon">📈</span>
+            <div class="nav-title">Drug dispensing & Inventory control console</div>
+        </div>
+
+        <div class="nav-card" data-href="martrix.html">
+            <span class="nav-icon">⚙️</span>
+            <div class="nav-title">OR shchdule Martix (ตารางผ่าตัดสถานะห้อง)</div>
+        </div>
+
+        <div class="nav-card" data-href="comms_link.html">
+            <span class="nav-icon">💬</span>
+            <div class="nav-title">COMMS LINK (ช่องทางการสื่อสาร)</div>
+        </div>
+
+        <div class="nav-card" data-href="finance_audit.html">
+            <span class="nav-icon">💰</span>
+            <div class="nav-title">FINANCIAL AUDIT (ระบบตรวจสอบการเงิน)</div>
+        </div>
+
+        <div class="nav-card" data-href="research_hub.html">
+            <span class="nav-icon">🔬</span>
+            <div class="nav-title">RESEARCH HUB (ศูนย์กลางงานวิจัย)</div>
+        </div>
+
+        <div class="nav-card" data-href="inventory_control.html">
+            <span class="nav-icon">💊</span>
+            <div class="nav-title">INVENTORY CONTROL (ระบบควบคุมคลังยา)</div>
+        </div>
+
+        <div class="nav-card" data-href="history_logs.html">
+            <span class="nav-icon">📜</span>
+            <div class="nav-title">HISTORY LOGS (บันทึกและประวัติการใช้งาน)</div>
+        </div>
+
+    </div>
+
+    <footer style="margin-top: 40px; color: #555; font-size: 0.8em;">
+        Status: Online | Protocol 7.5.1 Active
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.nav-card');
+
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const targetUrl = this.getAttribute('data-href'); // ดึง URL จาก Attribute data-href
+
+                    if (targetUrl) {
+                        // เปลี่ยนหน้าเว็บไปยัง URL ปลายทาง
+                        window.location.href = targetUrl;
+                    } else {
+                        // กรณีที่ไม่ได้กำหนด URL ปลายทาง
+                        console.log('Module URL not set for this card.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

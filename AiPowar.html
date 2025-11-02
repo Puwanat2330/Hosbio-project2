@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Medical Image Analysis Portal</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <style>
+        /* ------------------------------------------- */
+        /* สไตล์สำหรับปุ่มย้อนกลับ (BACK BUTTON) */
+        /* ------------------------------------------- */
+        
+        .back-console-button {
+            /* ตำแหน่ง: มุมบนซ้าย (Fixed Position) */
+            position: fixed;
+            /* ทำให้ปุ่มอยู่ตำแหน่งเดิมเสมอเมื่อ Scroll */
+            top: 50px;
+            /* ระยะห่างจากขอบบน */
+            left: 30px;
+            /* ระยะห่างจากขอบซ้าย */
+            z-index: 1000;
+            /* ทำให้ปุ่มอยู่เหนือ Element อื่นๆ */
+            /* การตกแต่งปุ่ม */
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            border: 1px solid var(--primary-glow);
+            /* ใช้สีเรืองแสงหลัก */
+            background-color: rgba(52, 50, 50, 0.4);
+            /* พื้นหลังโปร่งแสงเล็กน้อย */
+            border-radius: 5px;
+            text-decoration: none;
+            /* ลบเส้นใต้ลิงก์ */
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        /* เอฟเฟกต์เมื่อชี้เม้าส์ */
+        
+        .back-console-button:hover {
+            background-color: var(--primary-glow);
+            /* เปลี่ยนพื้นหลังเป็นสีเรืองแสง */
+            color: var(--bg-dark);
+            /* เปลี่ยนข้อความให้เป็นสีเข้ม */
+            box-shadow: 0 0 15px var(--primary-glow);
+            /* เพิ่มแสงเรืองแสง */
+            transform: scale(1.05);
+            /* ขยายเล็กน้อย */
+        }
+        /* สไตล์ไอคอนลูกศร */
+        
+        .back-icon {
+            font-size: 1.2em;
+            margin-right: 8px;
+            color: var(--primary-glow);
+            /* ใช้สีเรืองแสงหลัก */
+        }
+        /* สไตล์ข้อความ */
+        
+        .back-text {
+            font-family: var(--font-main);
+            /* ใช้ฟอนต์หลักแบบล้ำยุค */
+            font-size: 0.9em;
+            color: var(--text-light);
+            /* สีข้อความปกติ */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        /* สไตล์เมื่อ Hover (เปลี่ยนสีข้อความและไอคอน) */
+        
+        .back-console-button:hover .back-icon,
+        .back-console-button:hover .back-text {
+            color: var(--bg-dark);
+            /* เปลี่ยนเป็นสีเข้ม */
+        }
+        /* Global Styles & Variables for Futuristic Console V2 */
+        
+         :root {
+            --primary-blue: #00e5ff;
+            /* Hyper Cyan: Main Accent */
+            --secondary-accent: #ff007f;
+            /* Hyper Pink: Alert/Action */
+            --bg-dark: #0d121b;
+            /* Ultra Dark Background */
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --text-light: #f0f0f0;
+            --text-medium: #b0b0b0;
+            --font-heading: 'Roboto', sans-serif;
+            --font-data: 'Share Tech Mono', monospace;
+        }
+        
+        body {
+            font-family: var(--font-heading);
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            /* Background Grid/Matrix Effect */
+            background-image: linear-gradient(0deg, transparent 24%, rgba(0, 0, 0, 0.1) 25%, rgba(0, 0, 0, 0.1) 26%, transparent 27%, transparent 74%, rgba(0, 0, 0, 0.1) 75%, rgba(0, 0, 0, 0.1) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0, 0, 0, 0.1) 25%, rgba(0, 0, 0, 0.1) 26%, transparent 27%, transparent 74%, rgba(0, 0, 0, 0.1) 75%, rgba(0, 0, 0, 0.1) 76%, transparent 77%, transparent);
+            background-size: 50px 50px;
+        }
+        /* --- Header: เพิ่มเส้นแสง --- */
+        
+        header {
+            width: 100%;
+            background-color: rgba(13, 18, 27, 0.95);
+            color: var(--primary-blue);
+            padding: 15px 40px;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+            /* Global Glow */
+            text-align: left;
+            font-size: 1.6em;
+            font-weight: 700;
+            border-bottom: 2px solid var(--primary-blue);
+            /* Stronger official line */
+            text-shadow: 0 0 5px rgba(0, 229, 255, 0.5);
+        }
+        
+        .main-content {
+            padding: 50px 20px 80px;
+            width: 90%;
+            max-width: 1200px;
+            flex-grow: 1;
+        }
+        /* --- Main Container: Glassmorphism Enhanced --- */
+        
+        .container {
+            background: rgba(255, 255, 255, 0.03);
+            /* Lighter Glass Background */
+            backdrop-filter: blur(12px);
+            /* Stronger Blur */
+            -webkit-backdrop-filter: blur(12px);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            /* Inner + Outer Shadow for Depth */
+            box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.1), 0 0 40px rgba(0, 229, 255, 0.2);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+        
+        @media (min-width: 992px) {
+            .container {
+                grid-template-columns: 1.5fr 3fr;
+                /* Input is slightly smaller */
+            }
+        }
+        /* --- Section Styling --- */
+        
+        .section {
+            padding: 30px;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.2);
+            /* Darker inner background */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        h2 {
+            font-family: var(--font-heading);
+            color: var(--text-light);
+            text-align: center;
+            font-size: 2.8em;
+            margin-bottom: 40px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px var(--primary-blue);
+        }
+        
+        h3 {
+            font-family: var(--font-data);
+            color: var(--secondary-accent);
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--secondary-accent);
+            padding-left: 10px;
+            text-transform: uppercase;
+        }
+        
+        p {
+            color: var(--text-medium);
+            font-size: 0.95em;
+        }
+        /* Form Controls */
+        
+        label {
+            color: var(--primary-blue);
+            font-family: var(--font-data);
+            text-shadow: 0 0 3px rgba(0, 229, 255, 0.5);
+        }
+        
+        input[type="file"] {
+            padding: 15px;
+            border: 1px solid var(--primary-blue);
+            border-radius: 6px;
+            background-color: rgba(0, 0, 0, 0.5);
+            transition: border-color 0.3s;
+        }
+        
+        input[type="file"]:focus {
+            outline: none;
+            border-color: var(--secondary-accent);
+            box-shadow: 0 0 10px var(--secondary-accent);
+        }
+        
+        button {
+            background-color: var(--secondary-accent);
+            color: var(--bg-dark);
+            padding: 20px 25px;
+            border: none;
+            border-radius: 8px;
+            margin-top: 50px;
+            font-size: 1.3em;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
+        }
+        
+        button:hover {
+            background-color: #ff3399;
+            box-shadow: 0 0 30px rgba(255, 51, 153, 0.8);
+            transform: scale(1.02);
+            /* Slight scale for micro-interaction */
+        }
+        /* Image/Data Display Panel */
+        
+        #image-preview {
+            border: 2px dashed var(--glass-border);
+            transition: border-color 0.3s;
+        }
+        
+        #image-preview:hover {
+            border-color: var(--primary-blue);
+        }
+        
+        #image-preview img {
+            border: 1px solid var(--primary-blue);
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+        }
+        /* Results Panel (Data Metrics) */
+        
+        #loading {
+            color: var(--primary-blue);
+            animation: pulse 1.0s infinite ease-in-out;
+            font-size: 1.3em;
+            letter-spacing: 1px;
+        }
+        
+        #results {
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--secondary-accent);
+            padding: 30px;
+        }
+        
+        .result-item {
+            font-size: 1.3em;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            /* Very faint line */
+        }
+        
+        .result-label {
+            color: var(--text-medium);
+        }
+        
+        .result-value {
+            font-weight: 700;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+        
+        .anomaly-result {
+            color: var(--secondary-accent);
+            animation: alert-flash 1.5s infinite;
+            /* Flashing Alert */
+        }
+        
+        .normal-result {
+            color: var(--primary-blue);
+        }
+        
+        @keyframes alert-flash {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+        /* --- Footer --- */
+        
+        footer {
+            background-color: rgba(13, 18, 27, 0.95);
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="index.html" class="back-console-button">
+        <span class="back-icon">❮</span>
+        <span class="back-text">RETURN TO MAIN OPS</span>
+    </a>
+
+    <header>
+        ADVANCED DIAGNOSTICS CONSOLE // V4.1.2 - QUANTUM ANALYTICS
+    </header>
+
+    <div class="main-content">
+        <h2>CORE IMAGING DATA ANALYSIS PLATFORM</h2>
+        <div class="container">
+            <div class="section">
+                <h3>[1] DATA ACQUISITION PROTOCOL</h3>
+                <p>โปรดป้อนแหล่งข้อมูลทางการแพทย์ที่ถูกต้องเพื่อเริ่มการประมวลผลสัญญาณและการวิเคราะห์เชิงลึก (AI-DL).</p>
+
+                <form id="upload-form">
+                    <label for="medical-image-file">SYSTEM INPUT: DATA STREAM / IMAGE FILE (.png / .jng / .pdf)</label>
+                    <input type="file" id="medical-image-file" accept=".png, .jpg, .jpeg, .pdf" required>
+
+                    <div id="image-preview">
+                        <p>AWAITING DATA INPUT</p>
+                    </div>
+
+                    <button type="submit">ACTIVATE CORE ANALYSIS MODULE</button>
+                </form>
+            </div>
+
+            <div class="section">
+                <h3>[2] METRIC ANALYSIS & REPORT</h3>
+                <div id="loading">... ACTIVATING CORE ALGORITHM // SIGNAL PROCESSING COMMENCING ...</div>
+
+                <div id="results">
+                    <div class="result-item">
+                        <span class="result-label">FILE REFERENCE ID:</span>
+                        <span id="file-name" class="result-value"></span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">AI DIAGNOSTIC CLASSIFICATION:</span>
+                        <span id="diagnosis" class="result-value"></span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">CONFIDENCE RATING (P-VALUE):</span>
+                        <span id="confidence" class="result-value"></span>
+                    </div>
+                    <p class="info-note">NOTICE: THIS SYSTEM IS FOR COMPUTATIONAL AID ONLY. CLINICAL VALIDATION IS REQUIRED.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        © 2025 Biomedical AI Solutions. All Rights Reserved. ACCESS LOGGED.
+    </footer>
+
+    <script>
+        const fileInput = document.getElementById('medical-image-file');
+        const imagePreview = document.getElementById('image-preview');
+        const uploadForm = document.getElementById('upload-form');
+        const loadingDiv = document.getElementById('loading');
+        const resultsDiv = document.getElementById('results');
+        const diagnosisSpan = document.getElementById('diagnosis');
+        const confidenceSpan = document.getElementById('confidence');
+        const fileNameSpan = document.getElementById('file-name');
+
+        // Function to display image preview (unchanged)
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (file.type.startsWith('image/')) {
+                        imagePreview.innerHTML = `<img src="${e.target.result}" alt="Image Preview">`;
+                    } else if (file.type === 'application/pdf') {
+                        imagePreview.innerHTML = `<p style="color: ${getComputedStyle(document.documentElement).getPropertyValue('--secondary-accent')}">PDF DATA STREAM DETECTED. (ตรวจพบข้อมูล PDF) AWAITING ANALYSIS.</p>`;
+                    } else {
+                        imagePreview.innerHTML = `<p>UNSUPPORTED FILE FORMAT DETECTED. (ตรวจพบรูปแบบไฟล์ที่ไม่รองรับ)</p>`;
+                    }
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.innerHTML = '<p>AWAITING DATA INPUT (รอการป้อนข้อมูล)</p>';
+            }
+        });
+
+        // Form submission for AI simulation (Revised with Thai Translation)
+        uploadForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('ERROR: Please select a medical data file. (กรุณาเลือกไฟล์ข้อมูลทางการแพทย์)');
+                return;
+            }
+
+            loadingDiv.textContent = '... ACTIVATING CORE ALGORITHM // SIGNAL PROCESSING COMMENCING (กำลังเริ่มอัลกอริทึมหลัก // เริ่มการประมวลผลสัญญาณ) ...';
+            loadingDiv.style.display = 'block';
+            resultsDiv.style.display = 'none';
+
+            // Simulate AI processing time
+            setTimeout(() => {
+                loadingDiv.style.display = 'none';
+
+                // ----------------------------------------------------
+                // 🧪 JavaScript Mock AI Analysis based on file name (พร้อมคำแปล)
+                // ----------------------------------------------------
+                const diagnoses = [{
+                    keywords: ['normal', 'healthy'],
+                    result: 'NSR - NO ANOMALY DETECTED (จังหวะหัวใจปกติ - ไม่พบความผิดปกติ)',
+                    isAbnormal: false,
+                    confidence: '99.99%'
+                }, {
+                    keywords: ['pneumonia', 'chest'],
+                    result: 'CRITICAL LUNG PATHOLOGY OBSERVED (พบพยาธิสภาพปอดขั้นวิกฤต)',
+                    isAbnormal: true,
+                    confidence: '96.25%'
+                }, {
+                    keywords: ['fracture', 'bone'],
+                    result: 'LEVEL IV SKELETAL FRACTURE (กระดูกหักระดับ 4)',
+                    isAbnormal: true,
+                    confidence: '97.50%'
+                }, {
+                    keywords: ['tumor', 'mass'],
+                    result: 'MALIGNANT NEOPLASM CONFIRMED (ยืนยันเนื้องอกร้าย)',
+                    isAbnormal: true,
+                    confidence: '90.15%'
+                }, {
+                    keywords: ['ecg', 'heart', 'afib'],
+                    result: 'AFIB - CRITICAL RHYTHM ANOMALY (ภาวะหัวใจห้องบนสั่นพลิ้ว - จังหวะผิดปกติ)',
+                    isAbnormal: true,
+                    confidence: '93.70%'
+                }, {
+                    keywords: ['mri', 'brain'],
+                    result: 'NEURO-LESION IDENTIFIED (ระบุพบความเสียหายทางระบบประสาท)',
+                    isAbnormal: true,
+                    confidence: '95.00%'
+                }, ];
+
+                const fileNameLower = file.name.toLowerCase();
+                let analysisResult = diagnoses.find(d => d.keywords.some(keyword => fileNameLower.includes(keyword)));
+
+                if (!analysisResult) {
+                    analysisResult = {
+                        result: 'GENERIC SCAN: LOW PRIORITY SIGNAL (การสแกนทั่วไป: สัญญาณความสำคัญต่ำ)',
+                        isAbnormal: false,
+                        confidence: '85.00%'
+                    };
+                }
+
+                // Update UI with results
+                fileNameSpan.textContent = file.name.toUpperCase();
+                diagnosisSpan.textContent = analysisResult.result;
+                confidenceSpan.textContent = analysisResult.confidence;
+
+                diagnosisSpan.className = analysisResult.isAbnormal ? 'result-value anomaly-result' : 'result-value normal-result';
+
+                resultsDiv.style.display = 'block';
+
+            }, 4000);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 PATIENT ACCESS CONSOLE</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ------------------------------------------- */
+        /* CSS: ธีมสำหรับการลงทะเบียน (Intake Form) */
+        /* ------------------------------------------- */
+        
+         :root {
+            --primary-blue: #00aaff;
+            --primary-glow: #00e5ff;
+            --bg-dark: #0a141f;
+            --console-bg: rgba(2, 10, 20, 0.9);
+            --text-light: #e0f7ff;
+            --font-main: 'Orbitron', sans-serif;
+            --font-mono: 'Share Tech Mono', monospace;
+        }
+        
+        body {
+            font-family: var(--font-mono);
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle, rgba(0, 170, 255, 0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        
+        .login-box {
+            width: 400px;
+            padding: 40px;
+            background: var(--console-bg);
+            box-sizing: border-box;
+            box-shadow: 0 0 50px rgba(0, 170, 255, 0.5);
+            border-radius: 10px;
+            border: 1px solid var(--primary-blue);
+            text-align: center;
+            position: relative;
+        }
+        
+        .login-box h2 {
+            margin: 0 0 30px;
+            padding: 0;
+            color: var(--primary-glow);
+            text-shadow: 0 0 10px var(--primary-glow);
+            text-transform: uppercase;
+            font-family: var(--font-main);
+            font-size: 1.5em;
+        }
+        
+        .user-box {
+            position: relative;
+        }
+        
+        .user-box input {
+            width: 100%;
+            padding: 10px 0;
+            font-size: 1em;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            border: none;
+            border-bottom: 1px solid var(--primary-blue);
+            outline: none;
+            background: transparent;
+            font-family: var(--font-mono);
+        }
+        
+        .user-box label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 10px 0;
+            font-size: 1em;
+            color: rgba(255, 255, 255, 0.5);
+            pointer-events: none;
+            transition: .5s;
+        }
+        
+        .user-box input:focus~label,
+        .user-box input:valid~label {
+            top: -20px;
+            left: 0;
+            color: var(--primary-glow);
+            font-size: 0.8em;
+        }
+        /* --- ปุ่ม Submit --- */
+        
+        #access-button {
+            background-color: transparent;
+            color: var(--primary-glow);
+            padding: 10px 20px;
+            border: 1px solid var(--primary-glow);
+            border-radius: 5px;
+            text-transform: uppercase;
+            font-family: var(--font-main);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        #access-button:hover {
+            background-color: var(--primary-glow);
+            color: var(--bg-dark);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+        /* สไตล์ปุ่มย้อนกลับ (ใช้สำหรับกลับไปหน้า Main Dashboard) */
+        
+        .back-console-button {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 5px 10px;
+            border: 1px solid var(--primary-blue);
+            border-radius: 3px;
+            text-decoration: none;
+            color: var(--primary-blue);
+            font-size: 0.8em;
+            transition: all 0.3s;
+        }
+        
+        .back-console-button:hover {
+            background-color: var(--primary-blue);
+            color: var(--bg-dark);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-box">
+        <a href="index.html" class="back-console-button">❮ BACK</a>
+
+        <h2>ACCESS PATIENT FILE</h2>
+        <form id="patient-form">
+            <div class="user-box">
+                <input type="text" id="patient-id" value="779-ALPHA-33B" required>
+                <label>PATIENT ID (เช่น 779-ALPHA-33B)</label>
+            </div>
+            <div class="user-box">
+                <input type="text" id="patient-name" value="JOHN DOE" required>
+                <label>PATIENT NAME</label>
+            </div>
+            <div class="user-box">
+                <input type="text" id="patient-age" value="45" required>
+                <label>AGE</label>
+            </div>
+            <div class="user-box">
+                <input type="text" id="patient-condition" value="CARDIAC ARREST" required>
+                <label>PRIMARY CONDITION / DIAGNOSIS</label>
+            </div>
+
+            <button type="submit" id="access-button"> Next </button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('patient-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // 1. ดึงข้อมูลจากฟอร์ม
+            const patientId = document.getElementById('patient-id').value;
+            const patientName = document.getElementById('patient-name').value;
+            const patientAge = document.getElementById('patient-age').value;
+            const patientCondition = document.getElementById('patient-condition').value;
+
+            // 2. เก็บข้อมูลลงใน Local Storage
+            localStorage.setItem('monitor_patient_id', patientId);
+            localStorage.setItem('monitor_patient_name', patientName);
+            localStorage.setItem('monitor_patient_age', patientAge);
+            localStorage.setItem('monitor_patient_condition', patientCondition);
+
+            // 3. เปลี่ยนไปยังหน้า Vitals Monitor
+            window.location.href = 'monitor.html';
+        });
+    </script>
+</body>
+
+</html>

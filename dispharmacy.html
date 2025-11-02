@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📝 BATCH DISPENSE REQUEST FORM</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ------------------------------------------------------------------------------------------------------------ */
+        /* ------------------------------------------- */
+        /* สไตล์ปุ่มย้อนกลับ (ปรับปรุง) */
+        /* ------------------------------------------- */
+        
+        .back-console-button {
+            /* ตำแหน่ง: มุมบนซ้ายของ form-box */
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            /* สไตล์เริ่มต้น */
+            padding: 8px 15px;
+            border: 2px solid var(--primary-green);
+            /* เพิ่มความหนาของขอบ */
+            border-radius: 5px;
+            text-decoration: none;
+            color: var(--primary-green);
+            /* สีข้อความหลัก */
+            background-color: rgba(0, 0, 0, 0.5);
+            /* พื้นหลังโปร่งแสง */
+            font-size: 0.9em;
+            font-family: var(--font-main);
+            /* ใช้ฟอนต์หลัก */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            /* เอฟเฟกต์เรืองแสงเริ่มต้น */
+            box-shadow: 0 0 5px rgba(57, 255, 20, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .back-console-button :hover {
+            background-color: var(--primary-green);
+            color: var(--bg-dark);
+            box-shadow: 0 0 15px var(--primary-glow), 0 0 30px rgba(57, 255, 20, 0.7);
+            transform: scale(1.05);
+        }
+        /* ------------------------------------------------------------------------------------------------------------ */
+        /* ------------------------------------------- */
+        /* CSS: ธีมสำหรับการลงทะเบียน (Intake Form) - โทนสีเขียว */
+        /* ------------------------------------------- */
+        
+         :root {
+            --primary-green: #39ff14;
+            --primary-glow: #7cff66;
+            --bg-dark: #121212;
+            --console-bg: rgba(0, 0, 0, 0.9);
+            --text-light: #f0f0f0;
+            --font-main: 'Orbitron', sans-serif;
+            --font-mono: 'Share Tech Mono', monospace;
+        }
+        
+        body {
+            font-family: var(--font-mono);
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            /* จัดให้อยู่ด้านบน */
+            align-items: center;
+            padding: 40px 0;
+            min-height: 100vh;
+            background-image: radial-gradient(circle, rgba(57, 255, 20, 0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        
+        .form-box {
+            width: 700px;
+            /* เพิ่มความกว้าง */
+            padding: 30px;
+            background: var(--console-bg);
+            box-sizing: border-box;
+            box-shadow: 0 0 50px rgba(57, 255, 20, 0.5);
+            border-radius: 10px;
+            border: 1px solid var(--primary-green);
+            position: relative;
+        }
+        
+        .form-box h2 {
+            text-align: center;
+            margin: 0 0 30px;
+            color: var(--primary-glow);
+            text-shadow: 0 0 10px var(--primary-glow);
+            font-family: var(--font-main);
+            font-size: 1.5em;
+        }
+        /* --- Patient Info Section (ข้อมูลผู้ป่วยหลัก) --- */
+        
+        .patient-info-section {
+            border: 1px dashed rgba(57, 255, 20, 0.3);
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 5px;
+        }
+        
+        .user-box label {
+            display: block;
+            font-size: 0.9em;
+            color: var(--primary-green);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-family: var(--font-main);
+        }
+        
+        .user-box input,
+        .user-box select {
+            width: 100%;
+            padding: 8px 0;
+            font-size: 1em;
+            color: var(--text-light);
+            border: none;
+            border-bottom: 1px solid var(--primary-green);
+            outline: none;
+            background: transparent;
+            font-family: var(--font-mono);
+            margin-bottom: 15px;
+        }
+        /* --- Dynamic Drug Item List --- */
+        
+        #drug-list-container {
+            margin-top: 20px;
+        }
+        
+        .drug-item {
+            display: flex;
+            gap: 10px;
+            background-color: rgba(57, 255, 20, 0.05);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border-left: 3px solid var(--primary-glow);
+        }
+        
+        .drug-item>div {
+            flex: 1;
+        }
+        
+        .drug-item .item-label {
+            font-size: 0.8em;
+            color: var(--primary-green);
+            margin-bottom: 3px;
+        }
+        
+        .drug-item input,
+        .drug-item select {
+            border-bottom: 1px solid rgba(57, 255, 20, 0.7);
+            margin-bottom: 0;
+            padding: 5px 0;
+        }
+        
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #ff5722;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2em;
+            padding: 0 5px;
+            margin-left: 10px;
+            transition: color 0.2s;
+        }
+        
+        .remove-btn:hover {
+            color: #ff0000;
+        }
+        /* --- Action Buttons --- */
+        
+        .action-area {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+        
+        .action-button {
+            background-color: transparent;
+            color: var(--primary-glow);
+            padding: 10px 20px;
+            border: 1px solid var(--primary-glow);
+            border-radius: 5px;
+            text-transform: uppercase;
+            font-family: var(--font-main);
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-grow: 1;
+            margin: 0 5px;
+        }
+        
+        #add-item-button {
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+            flex-grow: 0;
+            width: 45%;
+        }
+        
+        .action-button:hover {
+            background-color: var(--primary-glow);
+            color: var(--bg-dark);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="form-box">
+        <a href="index.html" class="back-console-button">❮ BACK</a>
+
+        <h2>BATCH DISPENSE REQUEST INTERFACE</h2>
+        <form id="dispense-form">
+            <div class="patient-info-section">
+                <h3 style="color: var(--primary-glow); font-size: 1.1em; margin-top: 0;">PATIENT DETAILS</h3>
+                <div style="display: flex; gap: 20px;">
+                    <div style="flex: 2;">
+                        <label for="patient-name">PATIENT NAME</label>
+                        <input type="text" id="patient-name" value="Jane Doe" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="patient-id-input">PATIENT ID</label>
+                        <input type="text" id="patient-id-input" value="P-2024-001" required>
+                    </div>
+                </div>
+                <div>
+                    <label for="diagnosis">DIAGNOSIS / SYMPTOMS</label>
+                    <input type="text" id="diagnosis" value="High Fever / Infection" required>
+                </div>
+            </div>
+
+            <h3 style="color: var(--primary-glow); font-size: 1.1em; margin-top: 0;">DISPENSE ITEMS</h3>
+            <div id="drug-list-container">
+            </div>
+
+            <div class="action-area">
+                <button type="button" class="action-button" id="add-item-button">
+                    + ADD DRUG ITEM
+                </button>
+                <button type="submit" class="action-button" id="submit-button" style="width: 45%;">
+                    SUBMIT BATCH ORDER
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+        const drugContainer = document.getElementById('drug-list-container');
+        const drugOptions = [
+            'Paracetamol 500 MG',
+            'Amoxicillin 250 MG',
+            'Insulin Novorapid',
+            'Morphine (Controlled)',
+            'Aspirin 81 MG',
+            'Ibuprofen 400 MG'
+        ];
+        const locations = ['WARD A', 'WARD B', 'ICU', 'ER'];
+
+        function createDrugItem(defaultDrug = drugOptions[0], defaultQty = 1) {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'drug-item';
+
+            // Generate unique name for inputs (for easy form data retrieval)
+            const uniqueId = Date.now() + Math.random();
+
+            itemDiv.innerHTML = `
+                <div style="flex: 3;">
+                    <div class="item-label">DRUG NAME</div>
+                    <select name="drug_name" required>
+                        ${drugOptions.map(drug => 
+                            `<option value="${drug}" ${drug === defaultDrug ? 'selected' : ''}>${drug}</option>`
+                        ).join('')}
+                    </select>
+                </div>
+                <div style="flex: 1;">
+                    <div class="item-label">QTY</div>
+                    <input type="number" name="quantity" value="${defaultQty}" min="1" required>
+                </div>
+                <div style="flex: 1;">
+                    <div class="item-label">LOCATION</div>
+                    <select name="location" required>
+                        ${locations.map(loc => 
+                            `<option value="${loc}">${loc}</option>`
+                        ).join('')}
+                    </select>
+                </div>
+                <button type="button" class="remove-btn" onclick="this.closest('.drug-item').remove()">X</button>
+            `;
+            
+            drugContainer.appendChild(itemDiv);
+        }
+
+        // เพิ่มรายการแรกเมื่อโหลดหน้า
+        document.addEventListener('DOMContentLoaded', () => {
+            createDrugItem();
+        });
+
+        // Event Listener สำหรับปุ่ม "Add Drug Item"
+        document.getElementById('add-item-button').addEventListener('click', () => {
+            createDrugItem();
+        });
+
+        // ----------------------------------------------------
+        // SUBMIT FORM: บันทึกรายการทั้งหมดลงใน Local Storage
+        // ----------------------------------------------------
+        document.getElementById('dispense-form').addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            
+            // 1. ดึงข้อมูลผู้ป่วยหลัก
+            const patientName = document.getElementById('patient-name').value.toUpperCase();
+            const patientId = document.getElementById('patient-id-input').value.toUpperCase();
+            const diagnosis = document.getElementById('diagnosis').value.toUpperCase();
+
+            // 2. ดึงข้อมูลรายการยาที่กรอกทั้งหมด
+            const drugItems = document.querySelectorAll('.drug-item');
+            
+            if (drugItems.length === 0) {
+                alert('กรุณาเพิ่มรายการยาอย่างน้อย 1 รายการ');
+                return;
+            }
+
+            // 3. เตรียม Log ใหม่ (อาจมีหลายรายการ)
+            const newLogs = [];
+
+            drugItems.forEach(item => {
+                const drugName = item.querySelector('[name="drug_name"]').value;
+                const quantity = item.querySelector('[name="quantity"]').value;
+                const location = item.querySelector('[name="location"]').value;
+
+                newLogs.push({
+                    time: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+                    patientId: patientId,
+                    patientName: patientName,
+                    diagnosis: diagnosis,
+                    drugName: drugName,
+                    qty: quantity,
+                    location: location,
+                    // เพิ่มสถานะ processed เพื่อให้ pharmacy.html รู้ว่าต้องหักสต็อก
+                    processed: false 
+                });
+            });
+
+            // 4. จัดการ Local Storage (ดึง Log เก่าทั้งหมดออกมา)
+            let logs = localStorage.getItem('dispense_logs');
+            logs = logs ? JSON.parse(logs) : [];
+
+            // เพิ่ม Log ใหม่ทั้งหมดเข้าด้านหน้าสุด
+            logs = newLogs.concat(logs); 
+
+            // เก็บรายการ Log ใหม่กลับเข้าไปใน Local Storage
+            localStorage.setItem('dispense_logs', JSON.stringify(logs));
+
+            // 5. แจ้งเตือนและเปลี่ยนหน้า
+            alert(`รายการสั่งจ่าย ${newLogs.length} รายการ ถูกบันทึกแล้ว`);
+            window.location.href = 'pharmacy.html'; 
+        });
+    </script>
+</body>
+
+</html>

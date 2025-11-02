@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalized Stimulation Calculator</title>
+    <style>
+        /* ------------------------------------------- */
+        /* สไตล์สำหรับปุ่มย้อนกลับ (BACK BUTTON) */
+        /* ------------------------------------------- */
+        
+        .back-console-button {
+            /* ตำแหน่ง: มุมบนซ้าย (Fixed Position) */
+            position: fixed;
+            /* ทำให้ปุ่มอยู่ตำแหน่งเดิมเสมอเมื่อ Scroll */
+            top: 50px;
+            /* ระยะห่างจากขอบบน */
+            left: 30px;
+            /* ระยะห่างจากขอบซ้าย */
+            z-index: 1000;
+            /* ทำให้ปุ่มอยู่เหนือ Element อื่นๆ */
+            /* การตกแต่งปุ่ม */
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            border: 1px solid var(--primary-glow);
+            /* ใช้สีเรืองแสงหลัก */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* พื้นหลังโปร่งแสงเล็กน้อย */
+            border-radius: 5px;
+            text-decoration: none;
+            /* ลบเส้นใต้ลิงก์ */
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        /* เอฟเฟกต์เมื่อชี้เม้าส์ */
+        
+        .back-console-button:hover {
+            background-color: var(--primary-glow);
+            /* เปลี่ยนพื้นหลังเป็นสีเรืองแสง */
+            color: var(--bg-dark);
+            /* เปลี่ยนข้อความให้เป็นสีเข้ม */
+            box-shadow: 0 0 15px var(--primary-glow);
+            /* เพิ่มแสงเรืองแสง */
+            transform: scale(1.05);
+            /* ขยายเล็กน้อย */
+        }
+        /* สไตล์ไอคอนลูกศร */
+        
+        .back-icon {
+            font-size: 1.2em;
+            margin-right: 8px;
+            color: var(--primary-glow);
+            /* ใช้สีเรืองแสงหลัก */
+        }
+        /* สไตล์ข้อความ */
+        
+        .back-text {
+            font-family: var(--font-main);
+            /* ใช้ฟอนต์หลักแบบล้ำยุค */
+            font-size: 0.9em;
+            color: var(--text-light);
+            /* สีข้อความปกติ */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        /* สไตล์เมื่อ Hover (เปลี่ยนสีข้อความและไอคอน) */
+        
+        .back-console-button:hover .back-icon,
+        .back-console-button:hover .back-text {
+            color: var(--bg-dark);
+            /* เปลี่ยนเป็นสีเข้ม */
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap');
+         :root {
+            /* โทนสีหลัก: Navy Blue เข้ม */
+            --bg-dark: #12121e;
+            /* สีเน้น: Electric Blue/Teal */
+            --accent-color: #00ffff;
+            /* สีรอง: Magenta/Violet */
+            --secondary-accent: #ff00ff;
+            /* สีตัวอักษร: เทาอ่อน */
+            --text-light: #e0e0e0;
+        }
+        
+        body {
+            font-family: 'Roboto Mono', monospace;
+            /* ฟอนต์ดูเป็น Code/Digital */
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 90%;
+            background-color: #1a1a2e;
+            /* เข้มขึ้นเล็กน้อย */
+            padding: 40px;
+            border-radius: 10px;
+            /* เส้นขอบนีออน */
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 0 25px var(--accent-color), 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            /* ฟอนต์หัวข้อที่ดู Sci-Fi */
+            color: var(--accent-color);
+            text-align: center;
+            text-shadow: 0 0 10px var(--accent-color);
+            /* เงาแสงนีออน */
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            border-bottom: 2px dashed var(--secondary-accent);
+        }
+        
+        label {
+            display: block;
+            margin-top: 20px;
+            font-weight: 700;
+            color: var(--secondary-accent);
+        }
+        
+        input,
+        select {
+            width: 95%;
+            padding: 12px;
+            margin-top: 8px;
+            background-color: #0d0d15;
+            color: var(--text-light);
+            border: 1px solid var(--accent-color);
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--secondary-accent);
+            box-shadow: 0 0 8px var(--secondary-accent);
+        }
+        
+        button {
+            background-color: var(--accent-color);
+            color: var(--bg-dark);
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 40px;
+            font-size: 18px;
+            font-weight: 700;
+            width: 100%;
+            /* เอฟเฟกต์ Glow */
+            box-shadow: 0 0 15px var(--accent-color);
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-accent);
+            box-shadow: 0 0 20px var(--secondary-accent);
+        }
+        
+        #results {
+            margin-top: 40px;
+            padding: 25px;
+            border: 2px solid var(--secondary-accent);
+            border-radius: 10px;
+            background-color: #0b0b1a;
+            /* พื้นหลังเข้มมาก */
+            /* Text Glow */
+            text-shadow: 0 0 5px var(--accent-color);
+        }
+        
+        #results h3 {
+            color: var(--accent-color);
+            border-bottom: 1px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+        
+        #results p {
+            font-size: 1.2em;
+            margin: 15px 0;
+        }
+        
+        .highlight {
+            font-weight: bold;
+            color: var(--secondary-accent);
+            /* เน้นผลลัพธ์ด้วยสีชมพู/ม่วง */
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="index.html" class="back-console-button">
+        <span class="back-icon">❮</span>
+        <span class="back-text">RETURN TO MAIN OPS</span>
+    </a>
+
+    <div class="container">
+        <h2>Personalized Electrical Stimulation Calculator</h2>
+        <p>เครื่องมือวิเคราะห์เพื่อหาค่าพารามิเตอร์ไฟฟ้าที่เหมาะสมตามข้อมูลผู้ป่วย</p>
+
+        <label for="age">อายุ (ปี):</label>
+        <input type="number" id="age" value="30">
+
+        <label for="target-area">พื้นที่เป้าหมายของการรักษา:</label>
+        <select id="target-area">
+            <option value="400">กล้ามเนื้อแขน (Impedance 400 Ω)</option>
+            <option value="650">กล้ามเนื้อขา (Impedance 650 Ω)</option>
+            <option value="1200">ระบบประสาทส่วนกลาง (Impedance 1200 Ω)</option>
+        </select>
+
+        <label for="max-voltage">แรงดันไฟฟ้าสูงสุดที่ใช้ได้ (V):</label>
+        <input type="number" id="max-voltage" value="100" step="5">
+
+        <label for="pulse-width">ความกว้างของพัลส์เริ่มต้น (μs):</label>
+        <input type="number" id="pulse-width" value="200" step="10">
+
+        <button onclick="calculateStimulation()">คำนวณค่าพารามิเตอร์ที่แนะนำ</button>
+
+        <div id="results" style="display:none;">
+            <h3>ผลการคำนวณพารามิเตอร์ที่แนะนำ</h3>
+            <p>ความต้านทานโดยประมาณของเนื้อเยื่อ (<span class="highlight">R</span>): <span id="r-value"></span> Ω</p>
+            <p>กระแสไฟฟ้าสูงสุดที่ปลอดภัย (<span class="highlight">I_max</span>): <span id="i-max-value"></span> mA</p>
+            <p>ความถี่พัลส์ที่แนะนำ (Based on Age): <span id="freq-value"></span> Hz</p>
+            <p>พลังงานพัลส์ที่เหมาะสม (Energy per Pulse): <span id="energy-value"></span> mJ</p>
+        </div>
+    </div>
+
+    <script>
+        function calculateStimulation() {
+            // รับค่าจาก UI
+            const age = parseInt(document.getElementById('age').value);
+            const R_tissue = parseFloat(document.getElementById('target-area').value); // ความต้านทานจากพื้นที่เป้าหมาย (Ω)
+            const V_max = parseFloat(document.getElementById('max-voltage').value); // แรงดันสูงสุดที่ใช้ได้ (V)
+            const Pulse_Width_us = parseFloat(document.getElementById('pulse-width').value); // ความกว้างพัลส์เริ่มต้น (μs)
+
+            // ------------------------------------------------------------------
+            // A. การคำนวณทางวิศวกรรมไฟฟ้า (หลักการของ Ohm's Law)
+            // ------------------------------------------------------------------
+
+            // 1. คำนวณกระแสไฟฟ้าสูงสุดที่ปลอดภัย (I_max)
+            // I = V / R. แปลงเป็น mA (มิลลิแอมป์) โดยการคูณด้วย 1000
+            const I_max_mA = (V_max / R_tissue) * 1000;
+
+            // 2. คำนวณความถี่พัลส์ที่แนะนำ (สมมติฐานทางชีวการแพทย์)
+            // เราจะใช้ความรู้ทางการแพทย์และชีวการแพทย์ในการตั้งสมการ: 
+            // สมมติ: ความถี่ลดลงตามอายุ (สำหรับการกระตุ้นบางประเภท)
+            // (100 Hz สำหรับ 20 ปี, ลดลง 1 Hz ทุกๆ 5 ปีที่เพิ่มขึ้น)
+            const freq_base = 100;
+            const freq_reduction = Math.floor((age - 20) / 5) * 1;
+            const recommended_freq = Math.max(70, freq_base - freq_reduction); // ค่าต่ำสุดที่ 70 Hz
+
+            // 3. คำนวณพลังงานต่อพัลส์ (Energy per Pulse, E)
+            // สูตร Energy per Pulse (E) ในหน่วย Joules (J) คือ: E = V * I * t
+            // แต่เนื่องจาก I_max ขึ้นอยู่กับ R และ V, เราใช้ E = (V^2 / R) * t
+            // V = V_max, R = R_tissue, t = Pulse_Width_us * 10^-6 (ต้องแปลง microsecond เป็น second)
+
+            const Time_s = Pulse_Width_us * Math.pow(10, -6); // แปลง microsecond เป็น second
+            const E_Joules = (Math.pow(V_max, 2) / R_tissue) * Time_s;
+            const E_mJ = E_Joules * 1000; // แปลงเป็น mJ (มิลลิจูล)
+
+            // ------------------------------------------------------------------
+            // B. แสดงผลลัพธ์
+            // ------------------------------------------------------------------
+            document.getElementById('r-value').textContent = R_tissue.toFixed(0);
+            document.getElementById('i-max-value').textContent = I_max_mA.toFixed(2);
+            document.getElementById('freq-value').textContent = recommended_freq.toFixed(0);
+            document.getElementById('energy-value').textContent = E_mJ.toFixed(3);
+
+            document.getElementById('results').style.display = 'block';
+
+            // โค้ดสำหรับแนะนำการปรับค่า Pulse Width เพิ่มเติม
+            console.log(`แนะนำให้ปรับ Pulse Width ขึ้น/ลง เพื่อควบคุม Total Charge (Q = I * t)`);
+        }
+    </script>
+
+</body>
+
+</html>
